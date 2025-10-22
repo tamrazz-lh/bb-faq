@@ -1,0 +1,22 @@
+{
+  "name": "lh/bb-faq",
+  "description": "FaqPage",
+  "type": "wordpress-plugin",
+  "version": "1.0.0",
+  "keywords": [
+    "bb-sitemap",
+    "seo",
+    "lh",
+    "bh",
+    "bb",
+    "wordpress-plugin"
+  ],
+  "require": {
+    "php": ">=8.1"
+  },
+  "autoload": {
+    "psr-4": {
+      "Bb\\BbFaq\\": "src"
+    }
+  }
+}

@@ -1,0 +1,16 @@
+include:
+  # - project: 'infrastructure/ci-templates'
+  #   file: 'wordpress/templates/plugins-pipeline.yml'
+  #   inputs:
+  #     prj: lh
+  #     env: prod
+
+  # for testing
+  - project: 'devhacker/ci-templates'
+    file: 'lifehacker-deploy-stage-job-for-wp-plugin.yml'
+  - project: 'devhacker/ci-templates'
+    file: 'burninghut-deploy-stage-job-for-wp-plugin.yml'
+
+stages:
+  - deploy
+  - manual
