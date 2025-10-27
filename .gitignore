@@ -5,3 +5,5 @@
 /tmp
 /build/
 /.vscode/
+auth.json
+npmrc
