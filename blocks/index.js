@@ -1,11 +1,11 @@
 import { registerBlockType } from '@wordpress/blocks';
-import * as FaqBlock from "./Faq";
+import * as Faq from './Faq';
 
 function init(block) {
-    const name = block.name;
-    const metadata = block.metadata;
-    const Configuration = { name, ...metadata };
-    return registerBlockType(Configuration, block.settings);
+  const name = block.name;
+  const metadata = block.metadata;
+  const configuration = { name, ...metadata };
+  return registerBlockType(configuration, block.settings);
 }
 
-init(FaqBlock);
+init(Faq);
