@@ -1,0 +1,8 @@
+.placeholder.placeholder {
+    justify-content: flex-start;
+    min-height: 180px;
+}
+
+.placeholder * {
+    pointer-events: none;
+}

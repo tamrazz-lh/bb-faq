@@ -9,6 +9,8 @@ Requires PHP: 8.1
 Version: 1.0.0
 */
 
+use Bb\BbFaq\Gutenberg;
+
 if (!defined('ABSPATH')) {
     exit;
 }
@@ -21,6 +23,7 @@ require trailingslashit(BB_FAQ__PLUGIN_PATH) . '/vendor/autoload.php';
 
 function bb_faq__init()
 {
+    Gutenberg::init();
 }
 
 add_action('plugins_loaded', 'bb_faq__init', 10);
