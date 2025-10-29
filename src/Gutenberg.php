@@ -63,19 +63,22 @@ class Gutenberg
 
     /**
      * Инициализация блоков Гутенберг в админке.
+     * Необходимо так как на ЛХ появляются блоки
+     * только из специального белого листа.
+     * Этим хуком мы добавляем блоки в этот белый лист.
      *
      * @return void
      */
     private static function initBlocks(): void
     {
-        // $class = '\Lifehacker\GutenbergBlocks\App';
-        // $get = 'getBlocks';
-        // $add = 'addBlocks';
-        // if (!class_exists($class) || !method_exists($class, $get) || !method_exists($class, $add)) {
-        //     return;
-        // }
-        // $healthBlocks = $class::$get(BB_HEALTH__PLUGIN_FILE, 'assets/blocks');
-        // $class::$add($healthBlocks);
+        $class = '\Lifehacker\GutenbergBlocks\App';
+        $get = 'getBlocks';
+        $add = 'addBlocks';
+        if (!class_exists($class) || !method_exists($class, $get) || !method_exists($class, $add)) {
+            return;
+        }
+        $blocks = $class::$get(BB_FAQ__PLUGIN_FILE, 'blocks');
+        $class::$add($blocks);
     }
 
     /**

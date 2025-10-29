@@ -26,4 +26,4 @@ function bb_faq__init()
     Gutenberg::init();
 }
 
-add_action('plugins_loaded', 'bb_faq__init', 10);
+add_action('plugins_loaded', 'bb_faq__init', 35);
