@@ -1,5 +1,5 @@
 import { useBlockProps, RichText } from '@wordpress/block-editor';
-import { Button, TextControl, Icon } from '@wordpress/components';
+import { Button, TextControl } from '@wordpress/components';
 import { useState } from '@wordpress/element';
 
 function CharCounter( { current, max } ) {
@@ -76,7 +76,7 @@ function FaqItem( { faq, index, onRemove, onChange, isRemoveDisabled } ) {
                             onChange( index, 'answer', value )
                         }
                         placeholder="Здесь должен быть ответ на вопрос"
-                        formattingControls={ [ 'bold', 'italic', 'link' ] }
+                        allowedFormats={ [ 'core/bold', 'core/italic', 'core/link' ] }
                     />
                 </div>
             ) }
