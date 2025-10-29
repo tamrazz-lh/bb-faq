@@ -14,3 +14,7 @@ include:
 stages:
   - deploy
   - manual
+
+variables:
+  DEPLOY_WITH_COMPOSER_AND_NPM: "true"
+  PROJECT_NODE_VERSION: 14.17.1
