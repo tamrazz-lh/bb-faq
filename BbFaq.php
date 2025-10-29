@@ -19,7 +19,7 @@ define('BB_FAQ__PLUGIN_FILE', __FILE__);
 define('BB_FAQ__PLUGIN_PATH', plugin_dir_path(BB_FAQ__PLUGIN_FILE));
 define('BB_FAQ__PLUGIN_URL', plugin_dir_url(BB_FAQ__PLUGIN_FILE));
 
-require trailingslashit(BB_FAQ__PLUGIN_PATH) . '/vendor/autoload.php';
+require trailingslashit(BB_FAQ__PLUGIN_PATH) . 'vendor/autoload.php';
 
 function bb_faq__init()
 {

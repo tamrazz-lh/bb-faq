@@ -38,7 +38,7 @@
 
 .bb-faq-question-num {
     margin: 0;
-    font-size: 13px !important;
+    font-size: 11px !important;
     font-weight: 700 !important;
     cursor: pointer;
     flex-grow: 1;
@@ -47,7 +47,7 @@
 .bb-faq-header-buttons {
     display: flex;
     gap: 4px;
-    margin-left: 16px; // Отступ от заголовка
+    margin-left: 16px;
 }
 
 .bb-faq-control-button {
@@ -101,8 +101,5 @@
 
 .bb-faq-buttons-wrapper {
     margin-top: 24px;
-    padding-top: 16px;
-    border-top: 1px solid #ddd;
     display: flex;
-    justify-content: space-between;
 }

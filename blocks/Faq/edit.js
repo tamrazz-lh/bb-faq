@@ -107,22 +107,6 @@ export default function Edit( { attributes, setAttributes } ) {
         } );
     };
 
-    const isBlockValid =
-        title &&
-        title.trim().length > 0 &&
-        title.trim().length <= 100 &&
-        Array.isArray( faqs ) &&
-        faqs.length > 0 &&
-        faqs.every(
-            ( faq ) =>
-                faq.question &&
-                faq.question.trim().length > 0 &&
-                faq.question.trim().length <= 1000 &&
-                faq.answer &&
-                faq.answer.trim().length > 0 &&
-                faq.answer.trim().length <= 3500
-        );
-
     return (
         <div { ...blockProps }>
             <TextControl
@@ -153,13 +137,6 @@ export default function Edit( { attributes, setAttributes } ) {
             <div className="bb-faq-buttons-wrapper">
                 <Button variant="secondary" onClick={ onAddFaq }>
                     Добавить вопрос
-                </Button>
-                <Button
-                    variant="primary"
-                    isPrimary
-                    disabled={ ! isBlockValid }
-                >
-                    Сохранить
                 </Button>
             </div>
         </div>
