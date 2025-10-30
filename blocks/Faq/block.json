@@ -1,45 +1,45 @@
 {
-  "$schema": "https://schemas.wp.org/trunk/block.json",
-  "apiVersion": 2,
-  "name": "bb/faq",
-  "version": "0.1.0",
-  "title": "Вопросы-Ответы",
-  "category": "text",
-  "icon": "editor-help",
-  "description": "Блок для добавления на страницу списка часто задаваемых вопросов.",
-  "supports": {
-      "html": false
-  },
-  "attributes": {
-      "title": {
-          "type": "string",
-          "source": "html",
-          "selector": ".bb-faq-main-title",
-          "default": "Часто задаваемые вопросы"
-      },
-      "faqs": {
-          "type": "array",
-          "default": [
-              {
-                  "question": "",
-                  "answer": ""
-              }
-          ],
-          "source": "query",
-          "selector": ".bb-faq-item",
-          "query": {
-              "question": {
-                  "type": "string",
-                  "source": "html",
-                  "selector": ".bb-faq-question"
-              },
-              "answer": {
-                  "type": "string",
-                  "source": "html",
-                  "selector": ".bb-faq-answer"
-              }
-          }
-      }
-  },
-  "textdomain": "bb-faq"
-}
+    "$schema": "https://schemas.wp.org/trunk/block.json",
+    "apiVersion": 2,
+    "name": "bb/faq",
+    "version": "0.1.0",
+    "title": "Вопросы-Ответы",
+    "category": "text",
+    "description": "Блок для добавления на страницу списка часто задаваемых вопросов.",
+    "supports": {
+        "html": false
+    },
+    "attributes": {
+        "title": {
+            "type": "string",
+            "source": "html",
+            "selector": ".bb-faq-main-title",
+            "default": "Часто задаваемые вопросы"
+        },
+        "faqs": {
+            "type": "array",
+            "default": [
+                {
+                    "question": "",
+                    "answer": ""
+                }
+            ],
+            "source": "query",
+            "selector": ".bb-faq-item",
+            "query": {
+                "question": {
+                    "type": "string",
+                    "source": "html",
+                    "selector": ".bb-faq-question"
+                },
+                "answer": {
+                    "type": "string",
+                    "source": "html",
+                    "selector": ".bb-faq-answer"
+                }
+            }
+        }
+    },
+    "textdomain": "bb-faq"
+  }
+  

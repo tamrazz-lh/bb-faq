@@ -1,7 +1,7 @@
 import view from './view';
 import edit from './edit';
 import metadata from './block.json';
-import { editorHelp as icon } from '@wordpress/icons';
+import { helpFilled as icon } from '@wordpress/icons';
 
 import './assets/editor.scss';
 
