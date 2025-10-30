@@ -71,6 +71,9 @@ class Gutenberg
      */
     private static function initBlocks(): void
     {
+        if (!Helper::isLhProject()) {
+            return;
+        }
         $class = '\Lifehacker\GutenbergBlocks\App';
         $get = 'getBlocks';
         $add = 'addBlocks';
