@@ -65,6 +65,12 @@ class Helper
         return $prj === self::PRJ_LH;
     }
 
+    /**
+     * Возвращает все публичные типы постов
+     * в текущем проекте.
+     * 
+     * @return array
+     */
     public static function getPostTypes(): array
     {
         $types = array_values(get_post_types([
@@ -89,6 +95,20 @@ class Helper
         return array_diff($types, $exclude);
     }
 
+    /**
+     * Возвращает Гутенберг блоки из поста.
+     * С помощью аргументов можно:
+     * - фильтровать блоки по имени
+     * - ограничивать кол-во блоков в выдаче
+     * - дополнять аттрибуты блока дефолтными значениями.
+     * 
+     * @var WP_Post $post
+     * @var string $blockName
+     * @var int $limit
+     * @var bool $withDefaults
+     * 
+     * @return array
+     */
     public static function getPostBlocks(\WP_Post $post, string $blockName = '', int $limit = 0, bool $withDefaults = true): array
     {
         $blocks = parse_blocks($post->post_content);
@@ -112,10 +132,10 @@ class Helper
                 if (empty($block['attrs'])) {
                     $block['attrs'] = [];
                 }
-                $block['attrs'] = array_merge(
-                    static::getBlockAttributesFromJson($block['blockName']),
-                    $block['attrs']
-                );
+                $defaultAttrs = array_map(function ($attributes) {
+                    return $attributes['default'] ?? '';
+                }, static::getBlockAttributesFromJson($block['blockName']));
+                $block['attrs'] = array_merge($defaultAttrs, $block['attrs']);
             }
         }
         if ($limit > 0) {
@@ -124,6 +144,15 @@ class Helper
         return $blocks;
     }
 
+    /**
+     * Возвращает массив аттрибутов блока,
+     * взятых из JSON-описания блока.
+     * Работает только с блоками, описанными в этом плагине. 
+     * 
+     * @var string $blockName
+     * 
+     * @return array
+     */
     public static function getBlockAttributesFromJson(string $blockName): array
     {
         $blockJsonDir = ucfirst(str_replace(['lh/', 'bh/', 'bb/'], ['', '', ''], $blockName));
@@ -136,20 +165,16 @@ class Helper
         $blockJson = file_get_contents($blockJsonPath);
         $blockData = json_decode($blockJson, true);
 
-        if (!$blockData || !isset($blockData['attributes'])) {
-            return [];
-        }
-
-        $defaults = [];
-        foreach ($blockData['attributes'] as $name => $attributes) {
-            if (isset($attributes['default'])) {
-                $defaults[$name] = $attributes['default'];
-            }
-        }
-
-        return $defaults;
+        return $blockData['attributes'] ?? [];
     }
 
+    /**
+     * Очистка строки от html-тегов.
+     * 
+     * @var string $rawText
+     * 
+     * @return string
+     */
     public static function sanitizeTextField(string $rawText): string
     {
         $text = wp_check_invalid_utf8($rawText);
@@ -164,6 +189,14 @@ class Helper
         return $text;
     }
 
+    /**
+     * Очистка массива строки от html-тегов.
+     * Обрабатывает массив рекурсивно, вместе с вложенными массивами.
+     * 
+     * @var array $textFields
+     * 
+     * @return array
+     */
     public static function sanitizeTextFieldArray(array $textFields): array
     {
         $sanitized = [];

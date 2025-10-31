@@ -7,7 +7,7 @@ class Gutenberg
     public const BUILD_DIR = BB_FAQ__PLUGIN_PATH . 'build/blocks/';
     public const BUILD_URL = BB_FAQ__PLUGIN_URL . 'build/blocks/';
     public const JS_HANDLER = 'bb-faq';
-    public const META_KEY = '_bb_faq_data';
+    public const META_KEY = '_bb_faq_block_data';
 
     /**
      * Статичная инициализация класса.
@@ -102,20 +102,27 @@ class Gutenberg
      */
     public static function registerMeta(): void
     {
-        // $postTypes = Helper::getPostTypes();
-        
-        // foreach ($postTypes as $postType) {
-        //     register_post_meta($postType, self::META_KEY, [
-        //         'show_in_rest' => true,
-        //         'single' => true,
-        //         'default' => '',
-        //         'type' => 'string',
-        //         'sanitize_callback' => 'sanitize_text_field',
-        //         'auth_callback' => [Helper::class, 'canEditPost'],
-        //     ]);
-        // }
+        foreach (Helper::getPostTypes() as $postType) {
+            register_post_meta($postType, self::META_KEY, [
+                'show_in_rest' => true,
+                'single' => true,
+                'default' => '',
+                'type' => 'string',
+                'auth_callback' => [Helper::class, 'canEditPost'],
+            ]);
+        }
     }
 
+    /**
+     * Хук.
+     * Сохраняет в мета-данных поста иформацию из блока FAQ.
+     * Нужно для построения схемы JSON-LD.
+     * 
+     * @var int $postId
+     * @var WP_Post $post
+     * 
+     * @return void
+     */
     public static function saveFaqMeta(int $postId, \WP_Post $post): void
     {
         if (wp_is_post_revision($postId) || wp_is_post_autosave($postId)) {
@@ -131,20 +138,20 @@ class Gutenberg
             return;
         }
 
-        $faqData = static::getFaqAttributes($post);
-        error_log('>>>> DEBUG: BB Faq 1 = ' . json_encode($faqData));
-        // $faqBlock = Helper::findFirstFaqBlock($blocks);
-
-        // if (!$faqBlock || empty($faqBlock['attrs']['faqs'])) {
-        //     delete_post_meta($postId, self::META_KEY);
-        //     return;
-        // }
-
-        // $faqData = wp_json_encode($faqBlock['attrs'], JSON_UNESCAPED_UNICODE);
-        // update_post_meta($postId, self::META_KEY, $faqData);
+        $faqData = static::getFaqAttributesFromPost($post);
+        update_post_meta($postId, self::META_KEY, json_encode($faqData, JSON_UNESCAPED_UNICODE));
     }
 
-    private static function getFaqAttributes(\WP_Post $post, bool $sanitize = true): array
+    /**
+     * Вспомогательная функция.
+     * Извлекает из контента поста аттрибуты блока FAQ.
+     * 
+     * @var WP_Post $post
+     * @var bool $sanitize
+     * 
+     * @return void
+     */
+    private static function getFaqAttributesFromPost(\WP_Post $post, bool $sanitize = true): array
     {
         if (empty($post->post_content)) {
             return [];
