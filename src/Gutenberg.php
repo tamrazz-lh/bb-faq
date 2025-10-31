@@ -131,8 +131,8 @@ class Gutenberg
             return;
         }
 
-        $blocks = Helper::getPostBlocks($post, 'bb/faq', 1);
-        error_log('>>>> DEBUG: BB Faq 1 = ' . json_encode($blocks));
+        $faqData = static::getFaqAttributes($post);
+        error_log('>>>> DEBUG: BB Faq 1 = ' . json_encode($faqData));
         // $faqBlock = Helper::findFirstFaqBlock($blocks);
 
         // if (!$faqBlock || empty($faqBlock['attrs']['faqs'])) {
@@ -142,5 +142,25 @@ class Gutenberg
 
         // $faqData = wp_json_encode($faqBlock['attrs'], JSON_UNESCAPED_UNICODE);
         // update_post_meta($postId, self::META_KEY, $faqData);
+    }
+
+    private static function getFaqAttributes(\WP_Post $post, bool $sanitize = true): array
+    {
+        if (empty($post->post_content)) {
+            return [];
+        }
+
+        $blocks = Helper::getPostBlocks($post, 'bb/faq', 1, true);
+        if (empty($blocks[0]['attrs'])) {
+            return [];
+        }
+
+        $attrs = $blocks[0]['attrs'];
+
+        if ($sanitize) {
+            $attrs = Helper::sanitizeTextFieldArray($attrs);
+        }
+
+        return $attrs;
     }
 }

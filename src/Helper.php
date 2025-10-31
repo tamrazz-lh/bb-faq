@@ -150,21 +150,34 @@ class Helper
         return $defaults;
     }
 
-    // public static function findFirstFaqBlock(array $blocks): ?array
-    // {
-    //     foreach ($blocks as $block) {
-    //         if (isset($block['blockName']) && $block['blockName'] === 'bb/faq') {
-    //             return $block;
-    //         }
+    public static function sanitizeTextField(string $rawText): string
+    {
+        $text = wp_check_invalid_utf8($rawText);
+        if ($text === '') {
+            return '';
+        }
 
-    //         if (!empty($block['innerBlocks'])) {
-    //             $found = self::findFirstFaqBlock($block['innerBlocks']);
-    //             if ($found) {
-    //                 return $found;
-    //             }
-    //         }
-    //     }
+        $text = wp_strip_all_tags($text, true);
+        $text = html_entity_decode($text, ENT_QUOTES | ENT_HTML5, 'UTF-8');
+        $text = trim($text);
 
-    //     return null;
-    // }
+        return $text;
+    }
+
+    public static function sanitizeTextFieldArray(array $textFields): array
+    {
+        $sanitized = [];
+
+        foreach ($textFields as $key => $field) {
+            if (is_string($field)) {
+                $sanitized[$key] = static::sanitizeTextField($field);
+            } elseif (is_array($field)) {
+                $sanitized[$key] = static::sanitizeTextFieldArray($field);
+            } else {
+                $sanitized[$key] = $field;
+            }
+        }
+
+        return $sanitized;
+    }
 }
