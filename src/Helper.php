@@ -89,7 +89,7 @@ class Helper
         return array_diff($types, $exclude);
     }
 
-    public static function getPostBlocks(\WP_Post $post, string $blockName = '', int $limit = 0): array
+    public static function getPostBlocks(\WP_Post $post, string $blockName = '', int $limit = 0, bool $withDefaults = true): array
     {
         $blocks = parse_blocks($post->post_content);
         if (empty($blocks)) {
@@ -101,16 +101,53 @@ class Helper
                 if (isset($block['blockName']) && $block['blockName'] === $blockName) {
                     $filteredBlocks[] = $block;
                 }
-                if ($limit && $limit === count($filteredBlocks)) {
-                    break;
-                }
             }
             $blocks = $filteredBlocks;
+        }
+        if ($withDefaults) {
+            foreach ($blocks as &$block) {
+                if (empty($block['blockName'])) {
+                    continue;
+                }
+                if (empty($block['attrs'])) {
+                    $block['attrs'] = [];
+                }
+                $block['attrs'] = array_merge(
+                    static::getBlockAttributesFromJson($block['blockName']),
+                    $block['attrs']
+                );
+            }
         }
         if ($limit > 0) {
             $blocks = array_slice($blocks, 0, $limit);
         }
         return $blocks;
+    }
+
+    public static function getBlockAttributesFromJson(string $blockName): array
+    {
+        $blockJsonDir = ucfirst(str_replace(['lh/', 'bh/', 'bb/'], ['', '', ''], $blockName));
+        $blockJsonPath = BB_FAQ__PLUGIN_PATH . "blocks/{$blockJsonDir}/block.json";
+        
+        if (!file_exists($blockJsonPath)) {
+            return [];
+        }
+
+        $blockJson = file_get_contents($blockJsonPath);
+        $blockData = json_decode($blockJson, true);
+
+        if (!$blockData || !isset($blockData['attributes'])) {
+            return [];
+        }
+
+        $defaults = [];
+        foreach ($blockData['attributes'] as $name => $attributes) {
+            if (isset($attributes['default'])) {
+                $defaults[$name] = $attributes['default'];
+            }
+        }
+
+        return $defaults;
     }
 
     // public static function findFirstFaqBlock(array $blocks): ?array

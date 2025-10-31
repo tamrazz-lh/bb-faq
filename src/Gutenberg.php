@@ -122,9 +122,6 @@ class Gutenberg
             return;
         }
 
-        $types = Helper::getPostTypes();
-        error_log('>>>> DEBUG: post types = ' . json_encode($types));
-
         if (!in_array($post->post_type, Helper::getPostTypes())) {
             return;
         }

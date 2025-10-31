@@ -12,8 +12,6 @@
     "attributes": {
         "title": {
             "type": "string",
-            "source": "html",
-            "selector": ".bb-faq-main-title",
             "default": "Часто задаваемые вопросы"
         },
         "faqs": {
@@ -23,21 +21,7 @@
                     "question": "",
                     "answer": ""
                 }
-            ],
-            "source": "query",
-            "selector": ".bb-faq-item",
-            "query": {
-                "question": {
-                    "type": "string",
-                    "source": "html",
-                    "selector": ".bb-faq-question"
-                },
-                "answer": {
-                    "type": "string",
-                    "source": "html",
-                    "selector": ".bb-faq-answer"
-                }
-            }
+            ]
         }
     },
     "textdomain": "bb-faq"
