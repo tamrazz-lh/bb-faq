@@ -7,6 +7,7 @@ class Gutenberg
     public const BUILD_DIR = BB_FAQ__PLUGIN_PATH . 'build/blocks/';
     public const BUILD_URL = BB_FAQ__PLUGIN_URL . 'build/blocks/';
     public const JS_HANDLER = 'bb-faq';
+    public const META_KEY = '_bb_faq_data';
 
     /**
      * Статичная инициализация класса.
@@ -91,6 +92,7 @@ class Gutenberg
      */
     private static function registerHooks(): void
     {
+        add_action('wp_after_insert_post', [__CLASS__, 'saveFaqMeta'], 10, 2);
     }
 
     /**
@@ -100,6 +102,48 @@ class Gutenberg
      */
     public static function registerMeta(): void
     {
+        // $postTypes = Helper::getPostTypes();
+        
+        // foreach ($postTypes as $postType) {
+        //     register_post_meta($postType, self::META_KEY, [
+        //         'show_in_rest' => true,
+        //         'single' => true,
+        //         'default' => '',
+        //         'type' => 'string',
+        //         'sanitize_callback' => 'sanitize_text_field',
+        //         'auth_callback' => [Helper::class, 'canEditPost'],
+        //     ]);
+        // }
     }
 
+    public static function saveFaqMeta(int $postId, \WP_Post $post): void
+    {
+        if (wp_is_post_revision($postId) || wp_is_post_autosave($postId)) {
+            return;
+        }
+
+        $types = Helper::getPostTypes();
+        error_log('>>>> DEBUG: post types = ' . json_encode($types));
+
+        if (!in_array($post->post_type, Helper::getPostTypes())) {
+            return;
+        }
+
+        if (empty($post->post_content)) {
+            delete_post_meta($postId, self::META_KEY);
+            return;
+        }
+
+        $blocks = Helper::getPostBlocks($post, 'bb/faq', 1);
+        error_log('>>>> DEBUG: BB Faq 1 = ' . json_encode($blocks));
+        // $faqBlock = Helper::findFirstFaqBlock($blocks);
+
+        // if (!$faqBlock || empty($faqBlock['attrs']['faqs'])) {
+        //     delete_post_meta($postId, self::META_KEY);
+        //     return;
+        // }
+
+        // $faqData = wp_json_encode($faqBlock['attrs'], JSON_UNESCAPED_UNICODE);
+        // update_post_meta($postId, self::META_KEY, $faqData);
+    }
 }

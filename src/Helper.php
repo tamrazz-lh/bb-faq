@@ -8,6 +8,17 @@ class Helper
     private const PRJ_BH = 'burninghut';
 
     /**
+     * Проверка текущего пользователя,
+     * на права редактировать пост.
+     * 
+     * @return bool
+     */
+    public static function canEditPost(): bool
+    {
+        return current_user_can('edit_posts');
+    }
+    
+    /**
      * Определяет название проекта по URL.
      *
      * @return string
@@ -54,4 +65,69 @@ class Helper
         return $prj === self::PRJ_LH;
     }
 
+    public static function getPostTypes(): array
+    {
+        $types = array_values(get_post_types([
+            'public' => true,
+            'show_ui' => true,
+            'show_in_menu' => true,
+        ]));
+    
+        $exclude = [
+            'revision',
+            'attachment',
+            'nav_menu_item',
+            'custom_css',
+            'customize_changeset',
+            'oembed_cache',
+            'user_request',
+            'wp_block',
+            'wp_template',
+            'wp_template_part',
+        ];
+    
+        return array_diff($types, $exclude);
+    }
+
+    public static function getPostBlocks(\WP_Post $post, string $blockName = '', int $limit = 0): array
+    {
+        $blocks = parse_blocks($post->post_content);
+        if (empty($blocks)) {
+            return [];
+        }
+        if (!empty($blockName)) {
+            $filteredBlocks = [];
+            foreach ($blocks as $block) {
+                if (isset($block['blockName']) && $block['blockName'] === $blockName) {
+                    $filteredBlocks[] = $block;
+                }
+                if ($limit && $limit === count($filteredBlocks)) {
+                    break;
+                }
+            }
+            $blocks = $filteredBlocks;
+        }
+        if ($limit > 0) {
+            $blocks = array_slice($blocks, 0, $limit);
+        }
+        return $blocks;
+    }
+
+    // public static function findFirstFaqBlock(array $blocks): ?array
+    // {
+    //     foreach ($blocks as $block) {
+    //         if (isset($block['blockName']) && $block['blockName'] === 'bb/faq') {
+    //             return $block;
+    //         }
+
+    //         if (!empty($block['innerBlocks'])) {
+    //             $found = self::findFirstFaqBlock($block['innerBlocks']);
+    //             if ($found) {
+    //                 return $found;
+    //             }
+    //         }
+    //     }
+
+    //     return null;
+    // }
 }
